@@ -44,7 +44,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 ```
 
 <kdb>
-    <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/QC%20of%2model.png">
+    <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/QC%20of%20model.png">
 </kdb>
 
 Interpretation:
