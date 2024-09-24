@@ -44,14 +44,14 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 ```
 
 <kdb>
-    <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/QC%20of%20model.png">
+    <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/QC%20of%2model.png">
 </kdb>
 
 Interpretation:
 
 Model fit is not amazing - while the residual distribution is centered around 0, outliers do exist (you can see that just in the raw shoot data). There is a fair amount of residual variance leftover, even accounting for variance in replicate (which is quite small overall). Suggests model could be refined further.
 
-QC plots suggest model is ok - blocks forming along the x-axis (fitted values) is a function of shoot growth, and is expected due to the collection of data. Residual v fitted are randomly scattered, which is good. QQ plot mostly fine however deviation at the ends suggests non-normality of residuals. Scale-location is not completely horizontal, but doesn't look systematic. Maybe needs transforming - can try later.
+QC plots suggest model is ok - blocks forming along the x-axis (fitted values) is a function of shoot growth, and is expected due to the collection of data. Residual v fitted are randomly scattered, which is good. QQ plot has a lot of deviation at the ends, suggests non-normality of residuals. Scale-location is not completely horizontal, but doesn't look systematic. Maybe needs transforming - can try later.
 
 Salt is by far the most influential factor on shoot mass, followed by variety and inoculant.
 The effects of variety and salt are strong, and there is a notable interaction between variety and salt, and inoculant and salt. Variety does not apear to be affected by inoculation. The combined interaction between variety, inoculant, and salt is not significant, indicating that the three factors together don’t explain additional variability beyond their individual effects.
@@ -90,6 +90,10 @@ inoculant:salt:variety   14.30    0.20    72 527.12    1.4861 0.0085356 **
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 ```
+
+<kdb>
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/QC%20of%20cleaned%20model.png"
+</kdb>
 
 
 
