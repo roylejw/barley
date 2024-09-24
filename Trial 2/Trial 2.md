@@ -3,8 +3,16 @@
 ## Raw growth of shoots
 
 <kdb>
-<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/Raw%20shoot%20mass.png">
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/Raw%20shoot%20mass.png">
+   Caption: Raw shoot growth, boxplot with mean and IQR ranges.
 </kdb>
+
+
+<kdb>
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/violin%20plot%20raw%20data.png">
+   Caption: Raw shoot growth as violin plot, with boxplot overlayed. Single points are outliers based on IQR range (1.5*IQR in either direction).
+</kdb>
+
 
 #### Interpretation: 
 Each salt level had a significant effect on growth - this is in contrast to trial one results which saw little difference between some salt levels. The control plant appears to have outperformed all other treatments at each salt level, a stark difference to what was seen in trial one. Differences between the 'NS' and 'S' inoculants can be seen across the experiment, with the 'S' inoculants performing better than their 'NS' counterparts. Can see some obvious outliers in the data - may be worth trimming these out if they fall outside the 1.5x IQR. 
@@ -45,6 +53,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 <kdb>
     <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/QC%20of%20model.png">
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/raw%20data%2095%20con%20comb%20vars.png">
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/raw%20data%2095%20con%20with%20var.png">
 </kdb>
 
 Interpretation:
@@ -59,6 +69,18 @@ The effects of variety and salt are strong, and there is a notable interaction b
 ### Outlier removal
 
 Reasoning: Large outliers can be seen in the raw data, greater than the 1.5x IQR and is likely due to poor seed performance rather than experimental effects.
+
+<kdb>
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/raw%20data%20no%20outliers.png">
+      Caption: Raw shoot growth, boxplot with mean and IQR ranges, original outliers removed.
+</kdb>
+
+
+<kdb>
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/violin%20of%20clean%20data%20no%20outliers.png">
+      Caption: Raw shoot growth, outliers removed, as violin plot, with boxplot overlayed. Single points are outliers based on IQR range (1.5*IQR in either direction).
+</kdb>
+
 
 ```
 Linear mixed model fit by REML. t-tests use Satterthwaite's method [lmerModLmerTest]
@@ -92,7 +114,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 ```
 
 <kdb>
-   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/QC%20of%20cleaned%20model.png"
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/QC%20of%20cleaned%20model.png">
+
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/estimated%20means%2095%20con%20merged%20var.png">
+
+   <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/estimated%20means%2095%20confidence%20sep%20var.png">
 </kdb>
 
 
@@ -150,6 +176,21 @@ plots <- lapply(1:4, function(i) {
 # Combine the plots into one image
 combined_plot <- wrap_plots(plots, ncol = 2)
 combined_plot
+
+# Violin plot
+plots <- lapply(1:4, function(i) {
+    ggplot(datasets[[i]], aes(x = inoculant, y = shoots, fill = inoculant)) +
+        geom_violin(trim = FALSE, alpha = 0.7) +  # Add violin plot
+        geom_boxplot(width = 0.2, outlier.shape = NA, color = "black") +  # Add boxplot without outliers
+        stat_boxplot(geom = "errorbar", width = 0.1) +  # Add error bars for the boxplot
+        geom_jitter(data = datasets[[i]][datasets[[i]]$shoots < (quantile(datasets[[i]]$shoots, 0.25) - 1.5 * IQR(datasets[[i]]$shoots)) | 
+                                             datasets[[i]]$shoots > (quantile(datasets[[i]]$shoots, 0.75) + 1.5 * IQR(datasets[[i]]$shoots)), ],
+                    width = 0.2, alpha = 0.5, size = 1.5, shape = 21, fill = "black") +  # Add only outlier points
+        labs(x = "Inoculant", y = "Shoot mass (g)", fill = "Salt level", title = titles[i]) +
+        theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 6))  # Center title
+})
+combined_plot <- wrap_plots(plots, ncol = 2)
+combined_plot
 ```
 ### Model and QC plots
 
@@ -205,8 +246,29 @@ remove_outliers <- function(df) {
 cleaned_data <- remove_outliers(raw_data)
 cleaned_model <- lmer(shoots ~ inoculant * salt * variety + (1 | replicate), cleaned_data)
 clean_anova <- anova(cleaned_model)
+emm_clean_data <- emmeans(cleaned_model, ~ inoculant * salt * variety)
+clean_df <- as.data.frame(emm_clean_data)
+clean_df$inoculant <- factor(clean_df$inoculant,
+                                levels = c("Control", setdiff(unique(clean_df$inoculant), "Control")))
+clean_df$salt <- factor(clean_df$salt, levels = c("0 dS/m", "6 dS/m", "12 dS/m", "18 dS/m"))
 
+plot_list <- list()
+salt_levels <- levels(clean_df$salt)
+for (salt in salt_levels) {
+    p <- ggplot(clean_df[clean_df$salt == salt, ], aes(x = inoculant, y = emmean, ymin = lower.CL, ymax = upper.CL, color = variety)) +
+        geom_point(position = position_dodge(width = 0.5)) +
+        geom_errorbar(position = position_dodge(width = 0.5), width = 0.2) +
+        labs(y = "Shoot Mass", x = "inoculant", title = NULL) +
+        ggtitle(paste("Salt Level:", salt)) +
+        theme(plot.title.position = "plot", plot.title = element_text(hjust = 1))
+    
+    plot_list[[salt]] <- p
+}
 
+combined_plot <- wrap_plots(plot_list, ncol = 1) + plot_annotation(title = "Estimated means with 95% confidence intervals", theme = theme(plot.title = element_text(hjust = 0.5)))
+print(combined_plot)
+
+### Repeat for emm calculation with no variety factor ###
 
 ```
 
