@@ -59,7 +59,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 Interpretation:
 
-Model fit is not amazing - while the residual distribution is centered around 0, outliers do exist (you can see that just in the raw shoot data). There is a fair amount of residual variance leftover, even accounting for variance in replicate (which is quite small overall). Suggests model could be refined further.
+Model fit is OK, have seen better - while the residual distribution is centered around 0, outliers do exist (you can see that just in the raw shoot data). There is a fair amount of residual variance leftover, even accounting for variance in replicate (which is quite small overall). Suggests model could be refined further.
 
 QC plots suggest model is ok - blocks forming along the x-axis (fitted values) is a function of shoot growth, and is expected due to the collection of data. Residual v fitted are randomly scattered, which is good. QQ plot has a lot of deviation at the ends, suggests non-normality of residuals. Scale-location is not completely horizontal, but doesn't look systematic. Maybe needs transforming - can try later.
 
@@ -68,7 +68,7 @@ The effects of variety and salt are strong, and there is a notable interaction b
 
 ### Outlier removal
 
-Reasoning: Large outliers can be seen in the raw data, greater than the 1.5x IQR and is likely due to poor seed performance rather than experimental effects.
+Reasoning: Large outliers can be seen in the raw data (especially where plants that were expected to grow), and is likely due to poor seed performance rather than experimental effects. Removing these should see an improvement in model performance.
 
 <kdb>
    <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/raw%20data%20no%20outliers.png">
@@ -121,6 +121,17 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
    <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/estimated%20means%2095%20confidence%20sep%20var.png">
 </kdb>
 
+#### Interpretation:
+
+Model convergence went down (that's good), at the cost of residuals being funkier at the top and tail end (that's bad). Removing these outliers also uncovered a signficant 3-way interaction between the variables, however I suspect this is simply a hangover of how strong the salt effect is on variety. Could be interesting to explore, however for now, visually, it looks like a non-effect. We'll see. 
+
+### Digital PCR results
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/Average%20abundance%20percentages%20for%20combined%20varieties.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/AMF%20to%20Bacteria.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/ITS%20to%20Bac.png">
 
 
 
