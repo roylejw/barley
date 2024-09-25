@@ -66,7 +66,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 Interpretation:
 
-Model fit is OK, have seen better - while the residual distribution is centered around 0, outliers do exist (you can see that just in the raw shoot data). There is a fair amount of residual variance leftover, even accounting for variance in replicate (which is quite small overall). Suggests model could be refined further.
+Model fit is... have seen better - while the residual distribution is centered around 0, outliers do exist (you can see that just in the raw shoot data). There is a fair amount of residual variance leftover, even accounting for variance in replicate (which is quite small overall). Suggests model could be refined further.
 
 QC plots suggest model is ok - blocks forming along the x-axis (fitted values) is a function of shoot growth, and is expected due to the collection of data. Residual v fitted are randomly scattered, which is good. QQ plot has a lot of deviation at the ends, suggests non-normality of residuals. Scale-location is not completely horizontal, but doesn't look systematic. Maybe needs transforming - can try later.
 
@@ -130,15 +130,31 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 #### Interpretation:
 
-Model convergence went down (that's good), at the cost of residuals being funkier at the top and tail end (that's bad). Removing these outliers also uncovered a signficant 3-way interaction between the variables, however I suspect this is simply a hangover of how strong the salt effect is on variety. Could be interesting to explore, however for now, visually, it looks like a non-effect. We'll see. 
+Model convergence went down (that's good), tails seem to have improved. Removing these outliers also uncovered a signficant 3-way interaction between the variables, however I suspect this is simply a hangover of how strong the salt effect is on variety. Could be interesting to explore, however for now, visually, it looks like a non-effect. We'll see. 
 
 ### Digital PCR results
 
 <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/Average%20abundance%20percentages%20for%20combined%20varieties.png">
 
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/boxplot%20AMF.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/boxplot%20its.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/boxplot%2016s.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/boxplot%20oomycetes.png">
+
 <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/AMF%20to%20Bacteria.png">
 
 <img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/ITS%20to%20Bac.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/oom%20to%20amf.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/AMF%20vs%20growth%20loess.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/16S%20vs%20growth%20loess.png">
+
+<img src="https://github.com/roylejw/barley/blob/main/Trial%202/images/ITS%20vs%20growth%20loess.png">
 
 
 
@@ -289,4 +305,26 @@ print(combined_plot)
 ### Repeat for emm calculation with no variety factor ###
 
 ```
+### Digital PCR results
+
+Data was pre-filtered to only include samples that had dPCR results. This new csv was imported.
+[CSV can be found here.](https://github.com/roylejw/barley/blob/main/Trial%202/data/trial_2_dpcr_included.csv)
+
+```
+data_filtered <- read.csv("trial_2_dpcr_included.csv")
+
+### boxplot for Fungal-bacterial ratios. Replace amfb with other headers to generate other graphs
+ggplot(data_filtered, aes(x = inoculant, y = amfb, fill = salt)) +
+    geom_boxplot(position = position_dodge(width = 0.7), width = 0.6) +
+    labs(x = "Inoculant", y = "F:B ratio", fill = "Salt level", title = "Fungal to Bacteria ratio across treatments and salt levels") +
+    scale_y_continuous(breaks = seq(0, max(data_filtered$FB), by = 0.1)) +
+    theme(plot.title = element_text(hjust = 0.5))  # Centers the title
+
+### Contrasts of growth v AMF per inoculant, replace y axis as needed
+
+ggplot(data_filtered, aes(x = shoots, y = log_amf, color = salt)) +
+    geom_point() +
+    geom_smooth(method = "loess", span = 1, aes(group = inoculant)) +
+    facet_wrap(~ inoculant) +
+    labs(title = "Contrast of total AMF against Plant Growth across AMF Treatments and Salinity Levels")
 
