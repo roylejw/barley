@@ -1,11 +1,11 @@
 # Trial 2
 
-Table of Contents
+## Table of Contents
 - [Raw growth of shoots](#raw-growth-of-shoots)
 - [Model generation & ANOVA](#model-generation-and-anova-result)
    - [Outlier removal](#outlier-removal)
 - [Digital PCR results](#digital-pcr-results)   
-
+- [R scripts](#code-to-generate)
 
 ## Raw growth of shoots
 
