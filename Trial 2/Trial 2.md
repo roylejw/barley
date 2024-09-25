@@ -1,5 +1,12 @@
 # Trial 2
 
+Table of Contents
+- [Raw growth of shoots](#raw-growth-of-shoots)
+- [Model generation & ANOVA](#model-generation-and-anova-result)
+   - [Outlier removal](#outlier-removal)
+- [Digital PCR results](#digital-pcr-results)   
+
+
 ## Raw growth of shoots
 
 <kdb>
@@ -17,7 +24,7 @@
 #### Interpretation: 
 Each salt level had a significant effect on growth - this is in contrast to trial one results which saw little difference between some salt levels. The control plant appears to have outperformed all other treatments at each salt level, a stark difference to what was seen in trial one. Differences between the 'NS' and 'S' inoculants can be seen across the experiment, with the 'S' inoculants performing better than their 'NS' counterparts. Can see some obvious outliers in the data - may be worth trimming these out if they fall outside the 1.5x IQR. 
 
-## Model generation & ANOVA result
+## Model generation and ANOVA result
 
 Replicate used as random effect (blocking). 
 ```
